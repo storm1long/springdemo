@@ -36,7 +36,7 @@ public class AuthServiceImpl implements AuthService{
      * @param password 密码
      * @return 登录结果
      */
-    @PostMapping("login")
+    // @PostMapping("login")
     @Override
     public LoginResult login(String username, String password) {
         // 创建认证令牌对象
