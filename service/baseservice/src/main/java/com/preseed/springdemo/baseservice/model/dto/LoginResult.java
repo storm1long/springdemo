@@ -1,13 +1,19 @@
 package com.preseed.springdemo.baseservice.model.dto;
 
-import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
 
-@Data
+@Getter
+@Setter
 public class LoginResult {
+    public LoginResult(){
+    }
     public LoginResult(String token, Long expires){
         this.token = token;
         this.expires = expires;
+        this.isAuthenticated = true;
     }
+    private boolean isAuthenticated = false;
     //"访问token"
     private String token;
 

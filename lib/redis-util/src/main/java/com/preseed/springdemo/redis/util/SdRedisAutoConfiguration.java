@@ -21,6 +21,7 @@ import org.springframework.data.redis.serializer.StringRedisSerializer;
 import com.fasterxml.jackson.annotation.JsonAutoDetect;
 import com.fasterxml.jackson.annotation.PropertyAccessor;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 
 // @ComponentScan("com.pttl.tlmall.lib.redis.util")
 @ConditionalOnClass(RedisOperations.class)
@@ -29,12 +30,13 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 public class SdRedisAutoConfiguration {
 
     @Bean
-    public RedisUtils redisUtil(@Qualifier("redisTemplate")RedisTemplate<Object, Object> redisTemplate){
+    public RedisUtils redisUtil(@Qualifier("redisTemplate") RedisTemplate<Object, Object> redisTemplate) {
         return new RedisUtils(redisTemplate);
     }
 
     /**
      * redisTemplate 序列化使用的jdkSerializeable, 存储二进制字节码, 所以自定义序列化类
+     * 
      * @param redisConnectionFactory
      * @return
      */
@@ -61,9 +63,12 @@ public class SdRedisAutoConfiguration {
 
         ObjectMapper objectMapper = new ObjectMapper();
         objectMapper.setVisibility(PropertyAccessor.ALL, JsonAutoDetect.Visibility.ANY);
-        objectMapper.activateDefaultTyping(objectMapper.getPolymorphicTypeValidator(), ObjectMapper.DefaultTyping.NON_FINAL);
-        return new Jackson2JsonRedisSerializer<>(objectMapper,Object.class);
+        objectMapper.activateDefaultTyping(objectMapper.getPolymorphicTypeValidator(),
+                ObjectMapper.DefaultTyping.NON_FINAL);
+        objectMapper.registerModule(new JavaTimeModule());
+        return new Jackson2JsonRedisSerializer<>(objectMapper, Object.class);
     }
+
     @SuppressWarnings("null")
     @Bean
     @ConditionalOnProperty(name = "spring.cache.type", havingValue = "redis")
@@ -71,10 +76,11 @@ public class SdRedisAutoConfiguration {
     public RedisCacheManager cacheManager(RedisConnectionFactory redisConnectionFactory) {
         // 配置序列化
         RedisCacheConfiguration config = RedisCacheConfiguration.defaultCacheConfig()
-        .serializeValuesWith(RedisSerializationContext.SerializationPair.
-        // GenericJackson2JsonRedisSerializer 会导致缓存失效,格式不对("@class": "com.pttl.tlmall.organization.domain.PttlBranch",)
-        // fromSerializer(new GenericJackson2JsonRedisSerializer()));
-        fromSerializer(jackson2JsonRedisSerializer()));
+                .serializeValuesWith(RedisSerializationContext.SerializationPair.
+                // GenericJackson2JsonRedisSerializer 会导致缓存失效,格式不对("@class":
+                // "com.pttl.tlmall.organization.domain.PttlBranch",)
+                // fromSerializer(new GenericJackson2JsonRedisSerializer()));
+                        fromSerializer(jackson2JsonRedisSerializer()));
         return RedisCacheManager.builder(redisConnectionFactory).cacheDefaults(config).build();
 
     }

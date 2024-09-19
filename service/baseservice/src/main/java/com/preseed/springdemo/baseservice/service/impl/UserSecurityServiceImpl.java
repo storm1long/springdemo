@@ -2,12 +2,15 @@ package com.preseed.springdemo.baseservice.service.impl;
 
 import java.util.List;
 
+import org.springframework.stereotype.Service;
+
 import com.preseed.springdemo.baseservice.domain.UserSecurity;
 import com.preseed.springdemo.baseservice.mapper.UserSecurityMapper;
 import com.preseed.springdemo.baseservice.service.UserSecurityService;
 
 import jakarta.annotation.Resource;
 
+@Service
 public class UserSecurityServiceImpl implements UserSecurityService {
 
   @Resource

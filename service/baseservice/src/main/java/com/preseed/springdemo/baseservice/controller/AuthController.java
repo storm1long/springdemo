@@ -3,7 +3,9 @@ package com.preseed.springdemo.baseservice.controller;
 import java.awt.Font;
 
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
@@ -12,6 +14,7 @@ import com.preseed.springdemo.baseservice.common.constant.SecurityConstants;
 import com.preseed.springdemo.baseservice.config.property.CaptchaProperties;
 import com.preseed.springdemo.baseservice.model.dto.CaptchaResult;
 import com.preseed.springdemo.baseservice.model.dto.LoginResult;
+import com.preseed.springdemo.baseservice.model.vo.LoginVo;
 import com.preseed.springdemo.baseservice.service.AuthService;
 import com.preseed.springdemo.redis.util.RedisUtils;
 
@@ -41,12 +44,12 @@ public class AuthController {
 
   @PostMapping("/login")
   public ResponseEntity<LoginResult> login(
-      @RequestParam String username,
-      @RequestParam String password) {
-    LoginResult loginResult = authService.login(username, password);
+       @RequestBody LoginVo loginVo) {
+    LoginResult loginResult = authService.login(loginVo.getUsername(), loginVo.getPassword());
     return ResponseEntity.ok(loginResult);
   }
 
+  @GetMapping("/captcha")
   public ResponseEntity<CaptchaResult> captcha() {
     int width = captchaProperties.getWidth();
     int height = captchaProperties.getHeight();

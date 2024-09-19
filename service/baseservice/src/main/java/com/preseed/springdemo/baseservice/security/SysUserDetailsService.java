@@ -1,5 +1,6 @@
 package com.preseed.springdemo.baseservice.security;
 
+import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -21,7 +22,7 @@ public class SysUserDetailsService implements UserDetailsService {
     if (userSecurity == null) {
       throw new UsernameNotFoundException(username);
     }
-    return new SysUserDetails(userSecurity);
+    return User.builder().username(username).password(userSecurity.getPassword()).build(); 
   }
 
 }

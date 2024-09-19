@@ -1,4 +1,11 @@
 spring:
+  servlet: 
+    path: api-baseservice
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://localhost:3306/eladmin?useSSL=false&serverTimezone=Asia/Shanghai&useUnicode=true&characterEncoding=utf-8&allowPublicKeyRetrieval=true
+    username: test
+    password: pd29712kpmqis
   application.name: springdemo
   data.redis:
     database: 7
@@ -34,3 +41,6 @@ captcha:
     size: 24
   # 验证码有效期(秒)
   expire-seconds: 120
+# logging:
+#   level:
+#     root: debug

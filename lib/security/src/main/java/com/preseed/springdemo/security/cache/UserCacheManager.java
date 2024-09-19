@@ -9,8 +9,12 @@ import com.preseed.springdemo.security.dto.LoginUserInfoDto;
 
 import jakarta.annotation.Resource;
 
-@Component
+// @Component
 public class UserCacheManager {
+
+    public UserCacheManager(RedisUtils redisUtils){
+        this.redisUtils = redisUtils;
+    }
 
     @Resource
     private RedisUtils redisUtils;
