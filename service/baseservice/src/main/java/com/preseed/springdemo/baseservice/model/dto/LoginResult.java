@@ -8,14 +8,14 @@ import lombok.Setter;
 public class LoginResult {
     public LoginResult(){
     }
-    public LoginResult(String token, Long expires){
-        this.token = token;
+    public LoginResult(String accessToken, Long expires){
+        this.accessToken = accessToken;
         this.expires = expires;
         this.isAuthenticated = true;
     }
     private boolean isAuthenticated = false;
     //"访问token"
-    private String token;
+    private String accessToken;
 
     // 过期时间(单位：毫秒)
     private Long expires;

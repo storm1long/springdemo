@@ -60,6 +60,15 @@
 			<groupId>com.preseed.springdemo.lib</groupId>
 			<artifactId>common-util</artifactId>
 		</dependency>
+				<dependency>
+			<groupId>com.preseed.springdemo.lib</groupId>
+			<artifactId>common</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.projectlombok</groupId>
+			<artifactId>lombok</artifactId>
+			<optional>true</optional>
+		</dependency>
 	</dependencies>
 
 </project>

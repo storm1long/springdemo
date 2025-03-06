@@ -3,6 +3,7 @@ package com.preseed.springdemo.baseservice.controller;
 import java.awt.Font;
 
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -10,13 +11,15 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.preseed.springdemo.baseservice.common.constant.SecurityConstants;
 import com.preseed.springdemo.baseservice.config.property.CaptchaProperties;
 import com.preseed.springdemo.baseservice.model.dto.CaptchaResult;
 import com.preseed.springdemo.baseservice.model.dto.LoginResult;
 import com.preseed.springdemo.baseservice.model.vo.LoginVo;
 import com.preseed.springdemo.baseservice.service.AuthService;
+import com.preseed.springdemo.beans.enums.LogModuleEnum;
+import com.preseed.springdemo.common.model.Result;
 import com.preseed.springdemo.redis.util.RedisUtils;
+import com.preseed.springdemo.security.constant.SecurityConstants;
 
 import cn.hutool.captcha.AbstractCaptcha;
 import cn.hutool.captcha.CaptchaUtil;
@@ -40,17 +43,24 @@ public class AuthController {
   @Resource
   private AuthService authService;
 
+  @Resource
   private RedisUtils redisUtils;
 
   @PostMapping("/login")
-  public ResponseEntity<LoginResult> login(
-       @RequestBody LoginVo loginVo) {
+  public Result<LoginResult> login(
+      @RequestBody LoginVo loginVo) {
     LoginResult loginResult = authService.login(loginVo.getUsername(), loginVo.getPassword());
-    return ResponseEntity.ok(loginResult);
+    return Result.success(loginResult);
+  }
+
+  @DeleteMapping("/logout")
+  public Result<Void> logout() {
+    authService.logout();
+    return Result.success();
   }
 
   @GetMapping("/captcha")
-  public ResponseEntity<CaptchaResult> captcha() {
+  public Result<CaptchaResult> captcha() {
     int width = captchaProperties.getWidth();
     int height = captchaProperties.getHeight();
     int interfereCount = captchaProperties.getInterfereCount();
@@ -68,7 +78,7 @@ public class AuthController {
     redisUtils.set(SecurityConstants.CAPTCHA_CODE_PREFIX + captchaKey, captchaCode,
         captchaProperties.getExpireSeconds());
 
-    return ResponseEntity.ok(CaptchaResult.builder()
+    return Result.success(CaptchaResult.builder()
         .captchaKey(captchaKey)
         .captchaBase64(imageBase64Data)
         .build());

@@ -16,6 +16,9 @@
 		<module>common-util</module>
 		<module>redis-util</module>
 		<module>security</module>
+		<module>log</module>
+		<module>excel-util</module>
+		<module>common</module>
 	</modules>
 
 	<dependencyManagement>
@@ -38,6 +41,21 @@
 			<dependency>
 				<groupId>com.preseed.springdemo.lib</groupId>
 				<artifactId>security</artifactId>
+				<version>${project.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>com.preseed.springdemo.lib</groupId>
+				<artifactId>common</artifactId>
+				<version>${project.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>com.preseed.springdemo.lib</groupId>
+				<artifactId>log</artifactId>
+				<version>${project.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>com.preseed.springdemo.lib</groupId>
+				<artifactId>excel-util</artifactId>
 				<version>${project.version}</version>
 			</dependency>
 		</dependencies>

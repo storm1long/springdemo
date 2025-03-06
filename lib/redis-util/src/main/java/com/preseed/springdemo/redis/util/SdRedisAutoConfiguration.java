@@ -30,7 +30,7 @@ import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 public class SdRedisAutoConfiguration {
 
     @Bean
-    public RedisUtils redisUtil(@Qualifier("redisTemplate") RedisTemplate<Object, Object> redisTemplate) {
+    public RedisUtils redisUtil(@Qualifier("redisTemplate") RedisTemplate<String, Object> redisTemplate) {
         return new RedisUtils(redisTemplate);
     }
 
@@ -42,8 +42,8 @@ public class SdRedisAutoConfiguration {
      */
     @Bean
     // @ConditionalOnMissingBean(name = "redisTemplate")
-    public RedisTemplate<Object, Object> redisTemplate(RedisConnectionFactory redisConnectionFactory) {
-        RedisTemplate<Object, Object> redisTemplate = new RedisTemplate<>();
+    public RedisTemplate<String, Object> redisTemplate(RedisConnectionFactory redisConnectionFactory) {
+        RedisTemplate<String, Object> redisTemplate = new RedisTemplate<>();
         redisTemplate.setConnectionFactory(redisConnectionFactory);
 
         StringRedisSerializer stringRedisSerializer = new StringRedisSerializer();

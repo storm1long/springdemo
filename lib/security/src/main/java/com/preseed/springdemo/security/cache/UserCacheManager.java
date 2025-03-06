@@ -2,14 +2,12 @@ package com.preseed.springdemo.security.cache;
 
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.scheduling.annotation.Async;
-import org.springframework.stereotype.Component;
 
 import com.preseed.springdemo.redis.util.RedisUtils;
-import com.preseed.springdemo.security.dto.LoginUserInfoDto;
+import com.preseed.springdemo.security.dto.LoggedInUserInfoDto;
 
 import jakarta.annotation.Resource;
 
-// @Component
 public class UserCacheManager {
 
     public UserCacheManager(RedisUtils redisUtils){
@@ -23,15 +21,14 @@ public class UserCacheManager {
 
     /**
      * 返回用户缓存
-     * @param userName 用户名
-     * @return JwtUserDto
+     * @param token 用户名
      */
-    public LoginUserInfoDto getUserCache(String userName) {
-        if (StringUtils.isNotEmpty(userName)) {
+    public LoggedInUserInfoDto getUserCache(String token) {
+        if (StringUtils.isNotEmpty(token)) {
             // 获取数据
-            Object obj = redisUtils.get(CACHE_KEY + userName);
+            Object obj = redisUtils.get(CACHE_KEY + token);
             if(obj != null){
-                return (LoginUserInfoDto)obj;
+                return (LoggedInUserInfoDto)obj;
             }
         }
         return null;
@@ -39,25 +36,25 @@ public class UserCacheManager {
 
     /**
      *  添加缓存到Redis
-     * @param userName 用户名
+     * @param token 用户名
      */
     @Async
-    public void addUserCache(String userName, LoginUserInfoDto user,Long idleTime) {
-        if (StringUtils.isNotEmpty(userName)) {
-            redisUtils.set(CACHE_KEY + userName, user, idleTime);
+    public void addUserCache(String token, LoggedInUserInfoDto user,Long idleTime) {
+        if (StringUtils.isNotEmpty(token)) {
+            redisUtils.set(CACHE_KEY + token, user, idleTime);
         }
     }
 
     /**
      * 清理用户缓存信息
      * 用户信息变更时
-     * @param userName 用户名
+     * @param token 用户名
      */
     @Async
-    public void cleanUserCache(String userName) {
-        if (StringUtils.isNotEmpty(userName)) {
+    public void cleanUserCache(String token) {
+        if (StringUtils.isNotEmpty(token)) {
             // 清除数据
-            redisUtils.del(CACHE_KEY + userName);
+            redisUtils.del(CACHE_KEY + token);
         }
     }
 }

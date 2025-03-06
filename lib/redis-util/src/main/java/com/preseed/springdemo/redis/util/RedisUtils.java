@@ -18,7 +18,7 @@ import java.util.concurrent.TimeUnit;
 
 public class RedisUtils {
 
-	public RedisUtils(RedisTemplate redisTemplate){
+	public RedisUtils(RedisTemplate<String,Object> redisTemplate){
 		this.redisTemplate = redisTemplate;
 	}
 	
@@ -28,7 +28,7 @@ public class RedisUtils {
 		return "RedisUtil [redisTemplate=" +conn.getHostName()+ "]";
 	}
 	 
-	private RedisTemplate<Object,Object> redisTemplate  = null;
+	private RedisTemplate<String,Object> redisTemplate  = null;
 	/**
 	 * @Title: exits 普通类型
 	 * : 是否存在
@@ -149,7 +149,7 @@ public class RedisUtils {
 			//value为byte[]时，key传byte[]类型获取
 			return (T) redisTemplate.execute((RedisConnection redisConnection) -> redisConnection.get((byte[])key));
 		}
-		return (T) redisTemplate.boundValueOps(key).get();
+		return (T) redisTemplate.boundValueOps((String)key).get();
 	}
 
 	/**
@@ -337,10 +337,10 @@ public class RedisUtils {
 	 * 获取map缓存
 	 * @param key
 	 */
-	public  Map<String, Object> getMapObj(String key) {
-		BoundHashOperations<Object, String, Object> boundHashOperations = redisTemplate.boundHashOps(key);
-		return boundHashOperations.entries();
-	}
+	// public  Map<String, Object> getMapObj(String key) {
+	// 	BoundHashOperations<Object, String, Object> boundHashOperations = redisTemplate.boundHashOps(key);
+	// 	return boundHashOperations.entries();
+	// }
 
 
 	/**
@@ -500,7 +500,7 @@ public class RedisUtils {
 	 * @param pattern
 	 * @return
 	 */
-	public  Set<Object> keys(String pattern) {
+	public  Set<String> keys(String pattern) {
 		return redisTemplate.keys(pattern);
 	}
 
@@ -508,18 +508,16 @@ public class RedisUtils {
 	/**
 	 * 批量写入
 	 *
-	 * @author xiaoyunlong
 	 * @param map
 	 * @return
 	 */
-	public void multiSet(Map<?, ?> map) {
+	public void multiSet(Map<String, ?> map) {
 		redisTemplate.opsForValue().multiSet(map);
 	}
 
 	/**
 	 * 批量查询
 	 *
-	 * @author xiaoyunlong
 	 * @param keys
 	 * @return 查询结果的顺序与keys的顺序一直，无结果的为null
 	 */
@@ -531,8 +529,6 @@ public class RedisUtils {
 	 * key 不存在时，为 key 设置指定的值
 	 * key 存在时，不覆盖更新
 	 *
-	 * @author xiaoyunlong
-	 * @date 2019/12/13
 	 * @param time 失效时间（秒）
 	 * @return 设置成功，返回 true；设置失败，返回 false
 	 */
