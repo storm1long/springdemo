@@ -1,0 +1,30 @@
+package com.preseed.springdemo.baseservice.system.service.impl;
+
+import java.util.List;
+
+import org.springframework.stereotype.Service;
+
+import com.preseed.springdemo.baseservice.security.domain.UserSecurity;
+import com.preseed.springdemo.baseservice.system.mapper.UserSecurityMapper;
+import com.preseed.springdemo.baseservice.system.service.UserSecurityService;
+
+import jakarta.annotation.Resource;
+
+@Service
+public class UserSecurityServiceImpl implements UserSecurityService {
+
+  @Resource
+  private UserSecurityMapper userSecurityMapper;
+  @Override
+  public UserSecurity getUserSecurityByUserName(String username) {
+    List<UserSecurity> userSecurityList = userSecurityMapper.selectOnSecurityByName(username);
+    if(userSecurityList.isEmpty()) {
+      return null;
+    }
+    if(userSecurityList.size() > 1){
+      throw new RuntimeException("More than one user found for username: " + username);
+    }
+    return userSecurityList.get(0);
+  }
+
+}

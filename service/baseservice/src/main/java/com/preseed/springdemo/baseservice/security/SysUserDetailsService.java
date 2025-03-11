@@ -5,9 +5,9 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 
-import com.preseed.springdemo.baseservice.domain.UserSecurity;
-import com.preseed.springdemo.baseservice.service.UserSecurityService;
-import com.preseed.springdemo.baseservice.service.UserService;
+import com.preseed.springdemo.baseservice.security.domain.UserSecurity;
+import com.preseed.springdemo.baseservice.system.service.UserSecurityService;
+import com.preseed.springdemo.baseservice.system.service.UserService;
 import com.preseed.springdemo.security.dto.LoggedInUserInfoDto;
 
 import jakarta.annotation.Resource;
@@ -27,7 +27,7 @@ public class SysUserDetailsService implements UserDetailsService {
     if (userSecurity == null) {
       throw new UsernameNotFoundException(username);
     }
-    com.preseed.springdemo.baseservice.model.entity.User user = userService.getById(userSecurity.getUserId());
+    com.preseed.springdemo.baseservice.system.model.entity.User user = userService.getById(userSecurity.getUserId());
     
 
     // Set<SimpleGrantedAuthority> authentications = roles.stream().map(r -> new SimpleGrantedAuthority(r.getCode())).collect(Collectors.toSet());

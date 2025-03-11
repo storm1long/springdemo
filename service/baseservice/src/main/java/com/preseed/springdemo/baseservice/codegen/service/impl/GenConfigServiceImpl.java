@@ -20,7 +20,7 @@ import com.preseed.springdemo.baseservice.codegen.model.entity.GenFieldConfig;
 import com.preseed.springdemo.baseservice.codegen.model.form.GenConfigForm;
 import com.preseed.springdemo.baseservice.codegen.service.GenConfigService;
 import com.preseed.springdemo.baseservice.codegen.service.GenFieldConfigService;
-import com.preseed.springdemo.baseservice.service.MenuService;
+import com.preseed.springdemo.baseservice.system.service.MenuService;
 import com.preseed.springdemo.beans.enums.EnvEnum;
 import com.preseed.springdemo.common.exception.BusinessException;
 

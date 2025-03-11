@@ -5,7 +5,7 @@ import java.util.Collection;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
-import com.preseed.springdemo.baseservice.domain.UserSecurity;
+import com.preseed.springdemo.baseservice.security.domain.UserSecurity;
 
 public class SysUserDetails implements UserDetails{
   private UserSecurity user;

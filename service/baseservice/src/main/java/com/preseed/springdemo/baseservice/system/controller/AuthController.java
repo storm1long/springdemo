@@ -1,0 +1,88 @@
+package com.preseed.springdemo.baseservice.system.controller;
+
+import java.awt.Font;
+
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
+
+import com.preseed.springdemo.baseservice.config.property.CaptchaProperties;
+import com.preseed.springdemo.baseservice.system.model.dto.CaptchaResult;
+import com.preseed.springdemo.baseservice.system.model.dto.LoginResult;
+import com.preseed.springdemo.baseservice.system.model.vo.LoginVo;
+import com.preseed.springdemo.baseservice.system.service.AuthService;
+import com.preseed.springdemo.beans.enums.LogModuleEnum;
+import com.preseed.springdemo.common.model.Result;
+import com.preseed.springdemo.redis.util.RedisUtils;
+import com.preseed.springdemo.security.constant.SecurityConstants;
+
+import cn.hutool.captcha.AbstractCaptcha;
+import cn.hutool.captcha.CaptchaUtil;
+import cn.hutool.captcha.generator.CodeGenerator;
+import cn.hutool.core.util.IdUtil;
+import jakarta.annotation.Resource;
+
+@RestController
+@RequestMapping("/auth")
+public class AuthController {
+
+  @Resource
+  private CaptchaProperties captchaProperties;
+
+  @Resource
+  private CodeGenerator codeGenerator;
+
+  @Resource
+  private Font captchaFont;
+
+  @Resource
+  private AuthService authService;
+
+  @Resource
+  private RedisUtils redisUtils;
+
+  @PostMapping("/login")
+  public Result<LoginResult> login(
+      @RequestBody LoginVo loginVo) {
+    LoginResult loginResult = authService.login(loginVo.getUsername(), loginVo.getPassword());
+    return Result.success(loginResult);
+  }
+
+  @DeleteMapping("/logout")
+  public Result<Void> logout() {
+    authService.logout();
+    return Result.success();
+  }
+
+  @GetMapping("/captcha")
+  public Result<CaptchaResult> captcha() {
+    int width = captchaProperties.getWidth();
+    int height = captchaProperties.getHeight();
+    int interfereCount = captchaProperties.getInterfereCount();
+    int codeLength = captchaProperties.getCode().getLength();
+    AbstractCaptcha captcha = CaptchaUtil.createCircleCaptcha(width, height, codeLength, interfereCount);
+    captcha.setGenerator(codeGenerator);
+    captcha.setTextAlpha(captchaProperties.getTextAlpha());
+    captcha.setFont(captchaFont);
+
+    String captchaCode = captcha.getCode();
+    String imageBase64Data = captcha.getImageBase64Data();
+
+    // 验证码文本缓存至Redis，用于登录校验
+    String captchaKey = IdUtil.fastSimpleUUID();
+    redisUtils.set(SecurityConstants.CAPTCHA_CODE_PREFIX + captchaKey, captchaCode,
+        captchaProperties.getExpireSeconds());
+
+    return Result.success(CaptchaResult.builder()
+        .captchaKey(captchaKey)
+        .captchaBase64(imageBase64Data)
+        .build());
+
+  }
+
+}
